@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MyCalendar</string>
+    <string name="task_list_title">Мои задачи</string>
+    <string name="task_1_title">Купить учебник по Kotlin</string>
+    <string name="task_2_title">Пойти в спортзал</string>
+    <string name="task_3_title">Сделать домашку по Android</string>
+    <string name="task_4_title">Заказать обед</string>
+    <string name="task_5_title">Позвонить маме</string>
+</resources>
