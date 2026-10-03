@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class TaskAdapter(
-    private val tasks: List<Task>,
+    private var tasks: List<Task>,
     private val onTaskClick: (Task) -> Unit
 ) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
@@ -26,7 +26,7 @@ class TaskAdapter(
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = tasks[position]
         holder.title.text = task.title
-        holder.date.text = task.date
+        holder.date.text = "${task.date}  ${task.time}"
         holder.status.text = if (task.isDone) "Выполнена" else "Не выполнена"
         holder.status.setTextColor(
             if (task.isDone) 0xFF4CAF50.toInt() else 0xFFFF5722.toInt()
@@ -38,4 +38,10 @@ class TaskAdapter(
     }
 
     override fun getItemCount(): Int = tasks.size
+
+    // Новый метод — обновляет список задач
+    fun updateTasks(newTasks: List<Task>) {
+        tasks = newTasks
+        notifyDataSetChanged()
+    }
 }
