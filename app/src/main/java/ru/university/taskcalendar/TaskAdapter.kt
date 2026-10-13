@@ -39,9 +39,10 @@ class TaskAdapter(
 
     override fun getItemCount(): Int = tasks.size
 
-    // Новый метод — обновляет список задач
     fun updateTasks(newTasks: List<Task>) {
         tasks = newTasks
         notifyDataSetChanged()
     }
+
+    fun getTaskAt(position: Int): Task = tasks[position]
 }
