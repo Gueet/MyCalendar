@@ -44,8 +44,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            0, // не поддерживаем перетаскивание
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT // свайп в обе стороны
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -55,26 +55,44 @@ class MainActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                val taskToDelete = adapter.getTaskAt(position)
+                val task = adapter.getTaskAt(position)
 
-                AlertDialog.Builder(this@MainActivity)
-                    .setTitle("Удалить задачу?")
-                    .setMessage("«${taskToDelete.title}» будет удалена")
-                    .setPositiveButton("Удалить") { _, _ ->
-                        viewModel.deleteTask(taskToDelete)
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Задача удалена",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    .setNegativeButton("Отмена") { _, _ ->
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+                        val updatedTask = task.copy(isDone = !task.isDone)
+                        viewModel.updateTask(updatedTask)
+
+                        val message = if (updatedTask.isDone) {
+                            "Задача выполнена"
+                        } else {
+                            "Задача не выполнена"
+                        }
+                        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+
                         adapter.notifyItemChanged(position)
                     }
-                    .setOnCancelListener {
-                        adapter.notifyItemChanged(position)
+
+                    ItemTouchHelper.RIGHT -> {
+                        AlertDialog.Builder(this@MainActivity)
+                            .setTitle("Удалить задачу?")
+                            .setMessage("«${task.title}» будет удалена")
+                            .setPositiveButton("Удалить") { _, _ ->
+                                viewModel.deleteTask(task)
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "Задача удалена",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            .setNegativeButton("Отмена") { _, _ ->
+                                adapter.notifyItemChanged(position)
+                            }
+                            .setOnCancelListener {
+                                adapter.notifyItemChanged(position)
+                            }
+                            .show()
                     }
-                    .show()
+                }
             }
         })
 
